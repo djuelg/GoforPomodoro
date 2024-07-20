@@ -32,20 +32,20 @@ func NiceTimeFormatting64(seconds int64) string {
 
 		var hoursTxt string
 		if hours == 1 {
-			hoursTxt = "hour"
+			hoursTxt = "Stunde"
 		} else {
-			hoursTxt = "hours"
+			hoursTxt = "Stunden"
 		}
 
-		return fmt.Sprintf("%d %s %d minutes", hours, hoursTxt, minutes)
+		return fmt.Sprintf("%d %s %d Minuten", hours, hoursTxt, minutes)
 	} else if seconds > 60 {
 		// >1 minute
 
 		minutes := int(math.Ceil(float64(seconds) / 60.0))
-		return fmt.Sprintf("%d minutes", minutes)
+		return fmt.Sprintf("%d Minuten", minutes)
 	} else {
 		// <=1 minute
-		return fmt.Sprintf("%d seconds", seconds)
+		return fmt.Sprintf("%d Sekunden", seconds)
 	}
 }
 
@@ -149,9 +149,9 @@ func (opt Optional[T]) IsEmpty() bool {
 
 func YesNo(value bool) string {
 	if value {
-		return "Yes"
+		return "Ja"
 	} else {
-		return "No"
+		return "Nein"
 	}
 }
 

@@ -92,13 +92,13 @@ func (c *Communicator) Subscribe(err error, update tgbotapi.Update, username str
 	if err != nil {
 		switch err.Error() {
 		case domain.AlreadySubscribed{}.Error():
-			c.ReplyWith("You already subscribed this chat group.\n\n" +
-				"Remember you can use /leave to cancel subscription.")
+			c.ReplyWith("Du hast diese Gruppe schon subscribed" +
+				"Mit dem Befehl /leave kannst du die Subscription beenden.")
 		case domain.SubscriptionError{}.Error():
 			c.ReplyWith("There has been an error with this operation (subscription).")
 		}
 	} else {
-		c.ReplyWith(fmt.Sprintf("Done! You will be tagged (@%s) in sprints' messages.", username))
+		c.ReplyWith(fmt.Sprintf("Erledigt! Du (@%s) wirst in den Sprint-Nachrichten getaggt.", username))
 	}
 }
 
@@ -106,12 +106,12 @@ func (c *Communicator) Unsubscribe(err error) {
 	if err != nil {
 		switch err.Error() {
 		case domain.AlreadyUnsubscribed{}.Error():
-			c.ReplyWith("You are (were) not subscribed in this chat group.")
+			c.ReplyWith("Du bist gerade nicht subscribed in dieser Gruppe.")
 		case domain.SubscriptionError{}.Error():
 			c.ReplyWith("There has been an error with this operation (subscription).")
 		}
 	} else {
-		c.ReplyWith("Done! You no longer subscribe in this chat group thus will not be tagged in future messages.")
+		c.ReplyWith("Erledigt! Du wirst nicht mehr in den Sprint-Nachrichten getaggt.")
 	}
 }
 
@@ -162,13 +162,13 @@ func (c *Communicator) SessionStarted(session *domain.Session, err error) {
 		var replyStr string
 
 		if session.IsSprintDurationUnspecified() {
-			replyStr = "This session will go as long as you want to keep focusing."
+			replyStr = "Diese Session wird so lange dauern, wie du fokussiert bleiben möchtest."
 		} else {
-			replyStr = fmt.Sprintf("This session will last for %s\n\nSession started!", utils.NiceTimeFormatting64(sessionTime))
+			replyStr = fmt.Sprintf("Diese Session wird %s dauern\n\nSession gestartet!", utils.NiceTimeFormatting64(sessionTime))
 		}
 		c.ReplyWithAndHourglassAndNotify(replyStr)
 	} else {
-		c.ReplyWith("Session was not set.\nPlease set a session or use /default for classic 4x25m+25m.")
+		c.ReplyWith("Session wurde nicht gestartet.\nBitte erstelle eine Session oder benutze /default für das klassische 4x25m+5m.")
 	}
 }
 
@@ -188,19 +188,19 @@ func (c *Communicator) SessionPaused() {
 func (c *Communicator) SessionFinishedHandler(id domain.ChatID, session *domain.Session, endKind sessionmanager.PomodoroEndKind) {
 	switch endKind {
 	case sessionmanager.PomodoroFinished:
-		c.ReplyAndNotify("Pomodoro done! The session is complete, congratulations!")
+		c.ReplyAndNotify("Pomodoro erledigt! Die Session ist abgeschlossen, Glückwunsch!")
 	case sessionmanager.PomodoroCanceled:
-		c.ReplyAndNotify("Session canceled.")
+		c.ReplyAndNotify("Session abgebrochen.")
 	}
 }
 
 func (c *Communicator) SessionPausedHandler(id domain.ChatID, session *domain.Session) {
-	c.ReplyAndNotify("Your session has paused.")
+	c.ReplyAndNotify("Deine Session wurde pausiert.")
 }
 
 func (c *Communicator) RestFinishedHandler(id domain.ChatID, session *domain.Session) {
 	text := fmt.Sprintf(
-		"Pomodoro %s started.",
+		"Pomodoro %s gestartet.",
 		utils.NiceTimeFormatting(session.GetPomodoroDurationSet().Seconds()),
 	)
 	c.ReplyWithAndHourglassAndNotify(text)
@@ -208,7 +208,7 @@ func (c *Communicator) RestFinishedHandler(id domain.ChatID, session *domain.Ses
 
 func (c *Communicator) RestBeginHandler(id domain.ChatID, session *domain.Session) {
 	text := fmt.Sprintf(
-		"Pomodoro done! Have rest for %s now.",
+		"Pomodoro erledigt! Du kannst jetzt für %s Pause machen.",
 		utils.NiceTimeFormatting(session.GetRestDurationSet().Seconds()),
 	)
 
@@ -216,63 +216,63 @@ func (c *Communicator) RestBeginHandler(id domain.ChatID, session *domain.Sessio
 }
 
 func (c *Communicator) SessionAlreadyRunning() {
-	c.ReplyWith("A session already running.")
+	c.ReplyWith("Es läuft bereits eine Session.")
 }
 
 func (c *Communicator) SessionResumed(err error, session *domain.Session) {
 	if err != nil {
 		if session.IsZero() {
-			c.ReplyWith("Session was not set.")
+			c.ReplyWith("Session wurde nicht gestartet.")
 		} else if session.IsCanceled() {
-			c.ReplyWith("Last session was canceled.")
+			c.ReplyWith("Die letzte Session wurde abgebrochen")
 		} else if !session.IsStopped() {
-			c.ReplyWith("Session is already running.")
+			c.ReplyWith("Es läuft bereits eine Session.")
 		} else {
 			c.ReplyWith("Server error.")
 		}
 		return
 	}
 
-	c.ReplyWithAndHourglassAndNotify("Session resumed!")
+	c.ReplyWithAndHourglassAndNotify("Session fortgesetzt!")
 }
 
 func (c *Communicator) OnlyGroupsCommand() {
-	c.ReplyWith("This command works only in groups, sorry.")
+	c.ReplyWith("Dieser Befehl funktioniert nur in Gruppen, sorry.")
 }
 
 func (c *Communicator) NewSession(session domain.SessionDefaultData) {
-	c.ReplyWith(fmt.Sprintf("New session!\n\n%s", session.String()))
+	c.ReplyWith(fmt.Sprintf("Neue Session!\n\n%s", session.String()))
 }
 
 func (c *Communicator) Info() {
-	c.ReplyWith("I am a pomodoro bot written in Go!")
-	c.ShowLicenseNotice()
+	c.ReplyWith("Hi, schön dich kennenzulernen! Ich bin ein Bot der versucht dir dabei zu helfen effizienter zu arbeiten.")
+	c.ReplyWith("Ich unterstütze mit Hilfe der Pomodoro Technik, einer Methode zur Steigerung der Produktivität durch Aufteilung der Arbeitszeit in 25-minütige Intervalle mit kurzen Pausen dazwischen, Timeboxing, einer Strategie, bei der für jede Aufgabe ein festes Zeitfenster eingeplant wird, und Erinnerungen generell.")
 }
 
 func (c *Communicator) DataCleaned() {
-	c.ReplyWith("Your data has been cleaned.")
+	c.ReplyWith("Deine Daten wurden gelöscht.")
 }
 
 func (c *Communicator) Help() {
-	c.ReplyWith("Set a session (examples)\n/25for4rest5 --> 4 🍅, 25 minutes + 5m for rest.\n" +
-		"The latter is also achieved with /default.\n" +
-		"/30for4 --> 4 🍅, 30 minutes (default: +5m for rest).\n" +
-		"/25 --> 1 🍅, 25 minutes (single pomodoro sprint)\n" +
-		"/30forXrest7 --> unspecified no. of 🍅s, 30 minutes + 7m for rest.\n\n" +
-		"Other commands:\n" +
-		"(/s) /start_sprint to start (if /autorun is set off)\n" +
-		"(/p) /pause to pause a session in run\n" +
-		"(/c) /cancel to cancel a session\n" +
-		"/resume to resume a paused session.\n" +
-		"(/se) /session to check your session settings and status.\n" +
-		"/reset to reset your profile/chat settings.\n" +
-		"/info to have some info on this bot.")
+	c.ReplyWith("Erstelle eine Session mit frei wählbaren Zeiten (z.B.)\n" +
+		"/25for4rest5 ➡️ 4 Pomodoros, je 25 Minuten + 5 Minuten Pause.\n" +
+		"Dies ist die Standardeinstellung, die auch mit /default gestartet werden kann.\n" +
+		"/30for4 ➡️ 4 Pomodoros, je 30 Minuten (mit Default von +5m als Pause).\n" +
+		"/25 ➡️ 1 Pomodoro, 25 Minuten (einzelner Sprint)\n\n" +
+		"Sonstige Commands:\n" +
+		"(/s) /start_sprint um einen Sprint zu starten (wenn /autorun ausgeschaltet ist)\n" +
+		"(/p) /pause um eine Session zu pausieren\n" +
+		"(/c) /cancel um eine Session abzubrechen\n" +
+		"/resume um eine pausierte Session fortzusetzen\n" +
+		"(/se) /session um den aktuellen Status der Session zu sehen\n" +
+		"/reset um deine Daten zu löschen\n" +
+		"/info um mehr über mich zu erfahren")
 }
 
 func (c *Communicator) SessionPaused(err error, session domain.Session) {
 	if err != nil {
 		if !session.IsStopped() {
-			c.ReplyWith("Session was not running.")
+			c.ReplyWith("Es gibt keine laufende Session.")
 		} else {
 			c.ReplyWith("Server error.")
 		}
@@ -282,7 +282,7 @@ func (c *Communicator) SessionPaused(err error, session domain.Session) {
 func (c *Communicator) SessionCanceled(err error, session domain.Session) {
 	if err != nil {
 		if session.IsStopped() {
-			c.ReplyWith("Session was not running.")
+			c.ReplyWith("Es gibt keine laufende Session.")
 		} else {
 			c.ReplyWith("Server error.")
 		}
@@ -294,7 +294,7 @@ func (c *Communicator) SessionState(session domain.Session) {
 
 	var replyMsgText string
 	if session.IsCanceled() {
-		replyMsgText = fmt.Sprintf("Your session state: %s.", stateStr)
+		replyMsgText = fmt.Sprintf("Aktueller Zustand deiner Session: %s.", stateStr)
 	} else {
 		replyMsgText = session.String()
 	}
@@ -306,7 +306,7 @@ func (c *Communicator) CommandError() {
 }
 
 func (c *Communicator) Hourglass() {
-	c.ReplyWithAndHourglass("Here is an hourglass")
+	c.ReplyWithAndHourglass("Hier ist eine Sanduhr")
 }
 
 func (c *Communicator) ShowPrivacyPolicy() {
@@ -314,7 +314,7 @@ func (c *Communicator) ShowPrivacyPolicy() {
 }
 
 func (c *Communicator) PrivacySettingsUpdated() {
-	c.ReplyWith("Your privacy settings have been updated!")
+	c.ReplyWith("Deine Datenschutzeinstellungen wurden aktualisiert.")
 }
 
 func (c *Communicator) ShowLicenseNotice() {
@@ -323,10 +323,8 @@ func (c *Communicator) ShowLicenseNotice() {
 
 func (c *Communicator) ErrorSessionTooLong() {
 	tooLongMessages := [...]string{
-		"I don't have time for this, sorry.",
-		"That's too much time for a session that I can manage.",
-		"Bammer. Loooong session.",
-		"The session you specified lasts too long.",
+		"Die Session ist zu lang.",
+		"Mit dieser Länge der Session kann ich nicht umgehen.",
 	}
 	rand.Seed(time.Now().UnixNano())
 	c.ReplyWith(tooLongMessages[rand.Intn(len(tooLongMessages))])

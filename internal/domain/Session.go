@@ -360,7 +360,7 @@ func (s *Session) String() string {
 	}
 
 	if s.GetPomodoroDurationSet() == 0 {
-		return "No session"
+		return "Keine laufende Session"
 	}
 
 	var middleStr string
@@ -368,31 +368,31 @@ func (s *Session) String() string {
 	if s.IsRest() {
 		sprintDuration += 1
 
-		middleStr = fmt.Sprintf("\nTime for current rest remaining: %s", utils.NiceTimeFormatting(s.GetRestDuration().Seconds()))
+		middleStr = fmt.Sprintf("\nDeine Pause dauert noch: %s", utils.NiceTimeFormatting(s.GetRestDuration().Seconds()))
 	} else {
-		middleStr = fmt.Sprintf("\nTime for current pomodoro remaining: %s", utils.NiceTimeFormatting(s.GetPomodoroDuration().Seconds()))
+		middleStr = fmt.Sprintf("\nDas Pomodoro läuft noch: %s", utils.NiceTimeFormatting(s.GetPomodoroDuration().Seconds()))
 	}
 
 	var sprintDurationSetStr string
 	var pomodorosRemainingStr string
 	if s.IsSprintDurationUnspecified() {
-		pomodorosRemainingStr = "Unspecified"
+		pomodorosRemainingStr = "Nicht gesetzt"
 		sprintDurationSetStr = "X"
 	} else {
 		pomodorosRemainingStr = fmt.Sprintf("%d", sprintDuration)
 		sprintDurationSetStr = fmt.Sprintf("%d", s.GetSprintDurationSet())
 	}
 
-	return fmt.Sprintf("Session of %s🍅 x %dm + %dm",
+	return fmt.Sprintf("Session aus %s Pomodoros mit je %dm + %dm",
 		sprintDurationSetStr, s.GetPomodoroDurationSet()/60, s.GetRestDurationSet()/60) +
-		fmt.Sprintf("\nPomodoros remaining: %s", pomodorosRemainingStr) +
+		fmt.Sprintf("\nVerbleibende Pomodoros: %s", pomodorosRemainingStr) +
 		middleStr +
-		fmt.Sprintf("\n\nCurrent session state: %s", s.State())
+		fmt.Sprintf("\n\nSession Zustand: %s", s.State())
 }
 
 func (sdd SessionDefaultData) String() string {
 	if sdd.PomodoroDurationSet == 0 {
-		return "No session"
+		return "Keine Session"
 	}
 
 	var middleStr string
@@ -401,33 +401,33 @@ func (sdd SessionDefaultData) String() string {
 	var sprintDurationSetStr string
 	var pomodorosRemainingStr string
 	if sdd.SprintDurationSet <= UnspecifiedSprintCardinality {
-		pomodorosRemainingStr = "Unspecified"
+		pomodorosRemainingStr = "Nicht gesetzt"
 		sprintDurationSetStr = "X"
 	} else {
 		pomodorosRemainingStr = fmt.Sprintf("%d", sprintDuration)
 		sprintDurationSetStr = fmt.Sprintf("%d", sdd.SprintDurationSet)
 	}
 
-	return fmt.Sprintf("Session of %s🍅 x %dm + %dm",
+	return fmt.Sprintf("Session aus %s Pomodoros mit je %dm + %dm",
 		sprintDurationSetStr, sdd.PomodoroDurationSet/60, sdd.RestDurationSet/60) +
-		fmt.Sprintf("\nPomodoros remaining: %s", pomodorosRemainingStr) +
+		fmt.Sprintf("\nVerbleibende Pomodoros: %s", pomodorosRemainingStr) +
 		middleStr +
-		fmt.Sprintf("\n\nCurrent session state: Pending")
+		fmt.Sprintf("\n\nSession Zustand: Ausstehend")
 }
 
 // LeftTimeMessage Print in a string in human-readable format (aimed at the
 // user) how much time is left either for task time or for rest.
 func (s *Session) LeftTimeMessage() string {
 	if s.IsPaused() && !s.IsFinished() {
-		return "Pomodoro in pause. (use /resume)"
+		return "Pomodoro pausiert. (nutze /resume zum Fortsetzen)"
 	}
 	if s.IsZero() || s.IsCanceled() || s.IsStopped() {
-		return "No running pomodoros!"
+		return "Keine laufenden Pomodoros!"
 	}
 	if s.IsRest() {
-		return "Rest for other " + utils.NiceTimeFormatting(s.GetRestDuration().Seconds())
+		return "Pause für noch " + utils.NiceTimeFormatting(s.GetRestDuration().Seconds())
 	} else {
-		return "Task time: " + utils.NiceTimeFormatting(s.GetPomodoroDuration().Seconds()) + " left."
+		return "Arbeitszeit: Noch" + utils.NiceTimeFormatting(s.GetPomodoroDuration().Seconds()) + "."
 	}
 }
 
@@ -483,18 +483,18 @@ func (s *Session) State() string {
 			s.GetSprintDuration() == s.GetSprintDurationSet() &&
 			s.GetRestDuration() == s.GetRestDurationSet() {
 
-			stateStr = "Pending"
+			stateStr = "Ausstehend"
 		} else {
-			stateStr = "Paused"
+			stateStr = "Pausiert"
 		}
 	} else if s.IsCanceled() {
-		stateStr = "Canceled"
+		stateStr = "Abgebrochen"
 	} else if s.IsFinished() {
-		stateStr = "Finished"
+		stateStr = "Erledigt"
 	} else if s.IsStopped() {
-		stateStr = "Stopped"
+		stateStr = "Gestoppt"
 	} else {
-		stateStr = "Running"
+		stateStr = "Laufend"
 	}
 	return stateStr
 }

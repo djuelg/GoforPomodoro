@@ -111,7 +111,7 @@ mainLoop:
 
 			if debugMode {
 				log.Printf("[%s] %s\n", update.Message.From.UserName, update.Message.Text)
-				log.Printf("New chat? | %v\n", utils.YesNo(newChat))
+				log.Printf("Neuen Chat erzeugen? | %v\n", utils.YesNo(newChat))
 			}
 
 			msgText := update.Message.Text
@@ -216,10 +216,10 @@ mainLoop:
 						continue
 					}
 					data.SetUserAutorun(appState, chatId, senderId, autorun)
-					communicator.ReplyWith("Autorun set " + strings.ToUpper(param) + ".")
+					communicator.ReplyWith("Autorun ist " + strings.ToUpper(param) + ".")
 				} else {
 					data.SetUserAutorun(appState, chatId, senderId, true)
-					communicator.ReplyWith("Autorun set ON.")
+					communicator.ReplyWith("Autorun ist AN.")
 				}
 			case "/se", "/session":
 				session := data.GetUserSessionRunning(appState, chatId, senderId)
@@ -230,7 +230,7 @@ mainLoop:
 				communicator.SessionPaused(err, *session)
 			case "/c", "/cancel":
 				ActionCancelSprint(senderId, chatId, appState, communicator)
-			case "/resume":
+			case "/r", "/resume":
 				ActionResumeSprint(senderId, chatId, appState, communicator)
 			case "/d", "/default":
 				data.UpdateDefaultUserSession(appState, chatId, senderId, domain.DefaultSession())

@@ -4,3 +4,5 @@ Pomodorogram.iml
 GoforPomodoro
 main
 *.db
+.env
+data
