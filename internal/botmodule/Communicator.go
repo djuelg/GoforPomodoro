@@ -126,6 +126,17 @@ func (c *Communicator) ReplyWith(text string) {
 	}
 }
 
+func (c *Communicator) ReplyWithSticker(stickerID string) {
+	bot := c.Bot
+	chatId := int64(c.ChatID)
+
+	msg := tgbotapi.NewSticker(chatId, tgbotapi.FileID(stickerID))
+	_, err := bot.Send(msg)
+	if err != nil {
+		log.Printf("ERROR: %s", err.Error())
+	}
+}
+
 func (c *Communicator) ReplyWithParseMode(text string, parseMode string, disablePreview bool) {
 	bot := c.Bot
 	chatId := int64(c.ChatID)
@@ -188,7 +199,8 @@ func (c *Communicator) SessionPaused() {
 func (c *Communicator) SessionFinishedHandler(id domain.ChatID, session *domain.Session, endKind sessionmanager.PomodoroEndKind) {
 	switch endKind {
 	case sessionmanager.PomodoroFinished:
-		c.ReplyAndNotify("Pomodoro erledigt! Die Session ist abgeschlossen, Glückwunsch!")
+		c.ReplyWithSticker("CAACAgIAAxkBAAEss6tmm63I_lXy3RWKz85flZjDNmMyxgAC9zQAAoPYKUg5dyrC1UyEyDUE")
+		c.ReplyAndNotify("Pomodoro erledigt. Die Session ist abgeschlossen, Glückwunsch!")
 	case sessionmanager.PomodoroCanceled:
 		c.ReplyAndNotify("Session abgebrochen.")
 	}
@@ -241,12 +253,14 @@ func (c *Communicator) OnlyGroupsCommand() {
 }
 
 func (c *Communicator) NewSession(session domain.SessionDefaultData) {
-	c.ReplyWith(fmt.Sprintf("Neue Session!\n\n%s", session.String()))
+	c.ReplyWithSticker("CAACAgIAAxkBAAEstLZmm_IKhOhXcYWUgdpy6xs6SfVNywAC_1AAAr9S4UiHr0g8ntWq3jUE")
+	c.ReplyWith(fmt.Sprintf("Viel Erfolg bei der neuen Session!\n\n%s", session.String()))
 }
 
 func (c *Communicator) Info() {
 	c.ReplyWith("Hi, schön dich kennenzulernen! Ich bin ein Bot der versucht dir dabei zu helfen effizienter zu arbeiten.")
-	c.ReplyWith("Ich unterstütze mit Hilfe der Pomodoro Technik, einer Methode zur Steigerung der Produktivität durch Aufteilung der Arbeitszeit in 25-minütige Intervalle mit kurzen Pausen dazwischen, Timeboxing, einer Strategie, bei der für jede Aufgabe ein festes Zeitfenster eingeplant wird, und Erinnerungen generell.")
+	c.ReplyWithSticker("CAACAgIAAxkBAAEstLZmm_IKhOhXcYWUgdpy6xs6SfVNywAC_1AAAr9S4UiHr0g8ntWq3jUE")
+	c.ReplyWith("Ich unterstütze mit Hilfe der Pomodoro Technik, einer Methode zur Steigerung der Produktivität durch Aufteilung der Arbeitszeit in Intervalle mit kurzen Pausen dazwischen. Außerdem helfe ich mit Timeboxing, einer Strategie, bei der für eine Aufgabe im voraus ein festes, begrenztes Zeitfenster eingeplant wird. Dies soll helfen sich nicht zu lange in Details zu verlieren.")
 }
 
 func (c *Communicator) DataCleaned() {

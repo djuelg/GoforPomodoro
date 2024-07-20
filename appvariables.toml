@@ -8,12 +8,12 @@ PrivacySettingsVersion = 1
 
 PrivacyPolicy1 = """<insert here your privacy policy>"""
 
-OpenSource1 = """Did you know that this bot is opensource? It is licensed \
-under AGPL 3.0. The official source code for this bot is available at
-\n\n
-https://github.com/IThoughtUGNU/GoforPomodoro
-\n\n
-You can read what the license consists at
-\n\n
+OpenSource1 = """Wusstest du schon, dass dieser Bot Open-Source ist? Er steht unter der AGPL 3.0 Lizenz. Der offizielle Quellcode für diesen Bot ist verfügbar unter:
+
+https://github.com/djuelg/GoforPomodoro
+(dies ist ein Fork von https://github.com/IThoughtUGNU/GoforPomodoro)
+
+Weitere Informationen über die Lizenz können Sie hier nachlesen:
+
 https://www.gnu.org/licenses/#AGPL
 """

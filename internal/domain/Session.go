@@ -383,11 +383,11 @@ func (s *Session) String() string {
 		sprintDurationSetStr = fmt.Sprintf("%d", s.GetSprintDurationSet())
 	}
 
-	return fmt.Sprintf("Session aus %s Pomodoros mit je %dm + %dm",
+	return fmt.Sprintf("Die Session besteht aus %s Pomodoros.\nEs sind jeweils %dm Arbeitszeit und %dm Pause angesetzt.\n",
 		sprintDurationSetStr, s.GetPomodoroDurationSet()/60, s.GetRestDurationSet()/60) +
 		fmt.Sprintf("\nVerbleibende Pomodoros: %s", pomodorosRemainingStr) +
 		middleStr +
-		fmt.Sprintf("\n\nSession Zustand: %s", s.State())
+		fmt.Sprintf("\nSession Zustand: %s", s.State())
 }
 
 func (sdd SessionDefaultData) String() string {
@@ -408,11 +408,11 @@ func (sdd SessionDefaultData) String() string {
 		sprintDurationSetStr = fmt.Sprintf("%d", sdd.SprintDurationSet)
 	}
 
-	return fmt.Sprintf("Session aus %s Pomodoros mit je %dm + %dm",
+	return fmt.Sprintf("Die Session besteht aus %s Pomodoros.\nEs sind jeweils %dm Arbeitszeit und %dm Pause angesetzt.\n",
 		sprintDurationSetStr, sdd.PomodoroDurationSet/60, sdd.RestDurationSet/60) +
 		fmt.Sprintf("\nVerbleibende Pomodoros: %s", pomodorosRemainingStr) +
 		middleStr +
-		fmt.Sprintf("\n\nSession Zustand: Ausstehend")
+		fmt.Sprintf("\nSession Zustand: Wird gestartet...")
 }
 
 // LeftTimeMessage Print in a string in human-readable format (aimed at the
@@ -427,7 +427,7 @@ func (s *Session) LeftTimeMessage() string {
 	if s.IsRest() {
 		return "Pause für noch " + utils.NiceTimeFormatting(s.GetRestDuration().Seconds())
 	} else {
-		return "Arbeitszeit: Noch" + utils.NiceTimeFormatting(s.GetPomodoroDuration().Seconds()) + "."
+		return "Noch " + utils.NiceTimeFormatting(s.GetPomodoroDuration().Seconds()) + " verbleibende Arbeitszeit."
 	}
 }
 

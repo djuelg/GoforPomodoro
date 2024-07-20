@@ -155,15 +155,13 @@ mainLoop:
 					}
 					continue
 				}
-			} else {
-				if newChat {
-					communicator.Info()
-					communicator.Help()
-					data.DefaultUserSettingsIfNeeded(appState, chatId)
-				}
-			}
+			} 
 
 			switch command {
+			case "/start":
+				communicator.Info()
+				communicator.Help()
+				data.DefaultUserSettingsIfNeeded(appState, chatId)
 			// Admin commands
 			case "/shutdown":
 				isAdmin := utils.Contains(settings.AdminIds, senderId)
@@ -244,6 +242,7 @@ mainLoop:
 				communicator.Help()
 			case "/info":
 				communicator.Info()
+				communicator.Help()
 			case "/clessidra":
 				communicator.Hourglass()
 			default:
