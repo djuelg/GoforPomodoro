@@ -273,12 +273,14 @@ func (c *Communicator) Help() {
 		"Dies ist die Standardeinstellung, die auch mit /default gestartet werden kann.\n" +
 		"/30for4 ➡️ 4 Pomodoros, je 30 Minuten (mit Default von +5m als Pause).\n" +
 		"/25 ➡️ 1 Pomodoro, 25 Minuten (einzelner Sprint)\n\n" +
-		"Sonstige Commands:\n" +
+		"Session Verwaltung:\n" +
 		"(/s) /start_sprint um einen Sprint zu starten (wenn /autorun ausgeschaltet ist)\n" +
 		"(/p) /pause um eine Session zu pausieren\n" +
 		"(/c) /cancel um eine Session abzubrechen\n" +
 		"/resume um eine pausierte Session fortzusetzen\n" +
-		"(/se) /session um den aktuellen Status der Session zu sehen\n" +
+		"(/se) /session um den aktuellen Status der Session zu sehen\n\n" +
+		"Weitere Commands \n" +
+		"(/tb) /timebox HH:MM Beschreibung ➡️ Erstellt eine Timebox bis zur angegebenen Uhrzeit \n" +
 		"/reset um deine Daten zu löschen\n" +
 		"/info um mehr über mich zu erfahren")
 }

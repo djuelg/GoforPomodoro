@@ -19,6 +19,9 @@ import (
 	"GoforPomodoro/internal/data"
 	"GoforPomodoro/internal/domain"
 	"GoforPomodoro/internal/sessionmanager"
+	"GoforPomodoro/internal/utils"
+	"time"
+	"fmt"
 )
 
 func ActionRestoreSprint(
@@ -109,4 +112,53 @@ func ActionStartSprint(
 			communicator.SessionPausedHandler,
 		),
 	)
+}
+
+func ActionTimebox(
+	senderId domain.ChatID,
+	chatId domain.ChatID,
+	appState *domain.AppState,
+	communicator *Communicator,
+	timeStr string,
+	taskDescription string,
+) {
+
+	// Identify German time zone (CET or CEST)
+	loc, err := time.LoadLocation("Europe/Berlin")
+	if err != nil {
+		fmt.Println("Error loading location:", err)
+		return
+	}
+
+	// Get the current date and time in the specified location
+	now := time.Now().In(loc)
+
+	// Parse the user's time input in the specified location
+	userTime, err := time.ParseInLocation("15:04", timeStr, loc)
+	if err != nil {
+		fmt.Println("Error parsing time:", err)
+		return
+	}
+
+	// Combine current date with the parsed time
+	userDateTime := time.Date(now.Year(), now.Month(), now.Day(), userTime.Hour(), userTime.Minute(), 0, 0, loc)
+
+	// If the parsed time is earlier today, add one day
+	if userDateTime.Before(now) {
+		userDateTime = userDateTime.Add(24 * time.Hour)
+	}
+
+	// Calculate the duration until the specified time
+	duration := userDateTime.Sub(now)
+	msg := fmt.Sprintf("Timebox erstellt\n→ Erinnerung in %s", utils.NiceTimeFormatting(int(duration.Seconds())))
+	communicator.ReplyWith(msg)
+
+	// Schedule the reminder
+	go func() {
+		if duration > 0 {
+			time.Sleep(duration)
+			msg := fmt.Sprintf("Timebox abgelaufen ✨\n→ %s", taskDescription)
+			communicator.ReplyWith(msg)
+		}
+	}()
 }

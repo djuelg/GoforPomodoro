@@ -235,6 +235,14 @@ mainLoop:
 				ActionStartSprint(senderId, chatId, appState, communicator)
 			case "/s", "/start_sprint":
 				ActionStartSprint(senderId, chatId, appState, communicator)
+			case "/tb", "/timebox":
+				args := strings.SplitN(update.Message.Text, " ", 3) // Split command into parts
+				if len(args) < 3 {
+					communicator.ReplyWith("Benutzung: /timebox HH:MM Beschreibung")
+					return
+				}
+				timeStr, taskDescription := args[1], args[2]
+				ActionTimebox(senderId, chatId, appState, communicator, timeStr, taskDescription)
 			case "/reset":
 				data.CleanUserSettings(appState, chatId, senderId)
 				communicator.DataCleaned()
